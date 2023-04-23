@@ -1,0 +1,297 @@
+
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Blog Detail - Django Blog</title>
+{% endblock title %}
+
+
+
+
+{% block content %}
+<style>
+    i{
+        font-size: 30px;
+        cursor: pointer;
+        background-color: none;
+        color: none !important;
+    }
+
+    .like_container{
+        width: auto;
+        height: auto;
+        padding: 10px 10px 10px 10px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        flex-direction: column
+    }
+
+    #like_count{
+        font-weight: bold
+    }
+
+    .mb-5 p{
+        font-size: 20px;
+    }
+</style>
+
+
+<div class="col-lg-8" style="margin-top: 50px">
+    <!-- Post content-->
+    <article>
+        <!-- Post header-->
+        <header class="mb-4">
+            <!-- Post title-->
+            <h1 class="fw-bolder mb-1">{{blog.title}}!</h1>
+            <!-- Post meta content-->
+            <div class="text-muted fst-italic mb-2">Posted on January 1, 2022 by Start Bootstrap</div>
+            <!-- Post categories-->
+            
+            {% for cat in blog.category.all %}
+            <a class="badge bg-secondary text-decoration-none link-light" href="#!">{{cat}}</a>
+            {% endfor %}
+                
+            
+            {% comment %} <a class="badge bg-secondary text-decoration-none link-light" href="#!">Freebies</a> {% endcomment %}
+
+            <div class="like_container">
+                {% if msg %}
+                
+                <i class="fa-solid fa-heart" id="like-btn"></i>
+
+                {% else %}
+
+                <i class="fa-regular fa-heart" id="like-btn"></i>
+
+                {% endif %}
+                
+                
+                <small id = "like_count">{{blog.likes.count}} like{{blog.likes.count|pluralize}}</small>
+                {% comment %} countr{{ num_countries|pluralize:"y,ies" }} {% endcomment %}
+            </div>
+
+            
+            
+          
+
+            
+
+        </header>
+        <!-- Preview image figure-->
+        <figure class="mb-4"><img class="img-fluid rounded" src="{{blog.image.url}}" alt="..." /></figure>
+        <!-- Post content-->
+        <section class="mb-5">
+            <p class="fs-5 mb-4">{{blog.body | linebreaks }}</p>
+            {% comment %} <p class="fs-5 mb-4">The universe is large and old, and the ingredients for life as we know it are everywhere, so there's no reason to think that Earth would be unique in that regard. Whether of not the life became intelligent is a different question, and we'll see if we find that.</p>
+            <p class="fs-5 mb-4">If you get asteroids about a kilometer in size, those are large enough and carry enough energy into our system to disrupt transportation, communication, the food chains, and that can be a really bad day on Earth.</p> {% endcomment %}
+            {% comment %} <h2 class="fw-bolder mb-4 mt-5">I have odd cosmic thoughts every day</h2>
+            <p class="fs-5 mb-4">For me, the most fascinating interface is Twitter. I have odd cosmic thoughts every day and I realized I could hold them to myself or share them with people who might be interested.</p>
+            <p class="fs-5 mb-4">Venus has a runaway greenhouse effect. I kind of want to know what happened there because we're twirling knobs here on Earth without knowing the consequences of it. Mars once had running water. It's bone dry today. Something bad happened there as well.</p> {% endcomment %}
+        </section>
+    </article>
+    <!-- Comments section-->
+
+    <div id="spinner" style="display:none">
+        <div class="spinner-border spinner-border-md text-info" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <div class="spinner-grow spinner-grow-md text-warning" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+    </div>
+
+    <section class="mb-5">
+        <div class="card bg-light">
+            <div class="card-body" id = "commentContainer">
+                <!-- Comment form-->
+                <form class="mb-4" id="commentForm" method="POST">
+                    {% csrf_token %}
+                    <textarea  id="commentBox" class="form-control" rows="3" placeholder="Join the discussion and leave a comment!" required></textarea>
+                    
+                    <button type = "submit" class = "btn btn-primary" style="width: 100%; margin-top: 10px">Submit</button>
+                </form>
+                <!-- Comment with nested comments-->
+                {% comment %} <div class="d-flex mb-4">
+                    Parent comment
+                    <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                    <div class="ms-3">
+                        <div class="fw-bold">Commenter Name</div>
+                        If you're going to lead a space frontier, it has to be government; it'll never be private enterprise. Because the space frontier is dangerous, and it's expensive, and it has unquantified risks.
+
+                         Child comment 1
+                        <div class="d-flex mt-4">
+                            <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                            <div class="ms-3">
+                                <div class="fw-bold">Commenter Name</div>
+                                And under those conditions, you cannot establish a capital-market evaluation of that enterprise. You can't get investors.
+                            </div>
+                        </div>
+
+                        Child comment 2
+
+                        <div class="d-flex mt-4">
+                            <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                            <div class="ms-3">
+                                <div class="fw-bold">Commenter Name</div>
+                                When you put money directly to a problem, it makes a good headline.
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div> {% endcomment %}
+                <!-- Single comment-->
+                {% for comment in comments %}
+
+                <div class="d-flex" id="commentSection">
+                    <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                    <div class="ms-3">
+                        <div class="fw-bold">{{comment.user}}</div>
+                        {{comment.body}}
+                    </div>
+                </div>
+                
+                {% endfor %}
+
+                
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<script>
+
+    let like_btn = document.getElementById("like-btn")
+    let blog_id = "{{blog.id}}"
+    let like_count = document.getElementById("like_count")
+
+    like_btn.addEventListener("click", likeBlog)
+
+
+    function likeBlog(e){
+
+
+        const data = { id : blog_id };
+        let url = "{% url 'like' %}"
+        let user = "{{request.user}}"
+
+        if(user == "AnonymousUser"){
+            alert("You have to login")
+        }
+
+        else{
+
+            fetch(url, {
+                method: 'POST', // or 'PUT'
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify(data),
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log('Success:', data);
+
+                    console.log(data["num"])
+                    
+                    {if(data["num"] < 2){
+                        like_count.innerText = `${data["num"]} like`
+                    }
+
+                    else{
+                        like_count.innerText = `${data["num"]} likes`
+                    }}
+
+                    {if(data["like"] == "no"){
+                        
+                        like_btn.classList.remove("fa-solid")
+                        like_btn.classList.add("fa-regular")
+                    }
+
+                    else{
+                        
+                        like_btn.classList.remove("fa-regular")
+                        like_btn.classList.add("fa-solid")
+
+                    }}
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+
+        }
+
+            
+
+
+    }
+
+    let commentForm = document.getElementById("commentForm")
+    let commentBox = document.getElementById("commentBox")
+    let commentContainer = document.getElementById("commentContainer")
+    let spinner = document.getElementById("spinner")
+    
+    commentForm.addEventListener("submit", submitComment)
+
+    function submitComment(e){
+        e.preventDefault()
+        console.log(commentBox.value)
+
+        let data = {"comment":commentBox.value, "id":blog_id}
+
+        let url = "{% url 'add_comment' %}"
+        spinner.style.display = "block"
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify(data)
+        })
+        .then((res)=> res.json())
+        .then((data) => {
+            console.log("success:", data)
+            
+
+            let n_div = document.createElement("div")
+            n_div.classList.add("d-flex")
+            n_div.innerHTML = `
+            <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+            <div class="ms-3">
+                <div class="fw-bold">${data["user"]}</div>
+                ${data["body"]}
+            </div> 
+            <br> <br> <br>
+            `
+
+
+
+            commentContainer.append(n_div)
+            spinner.style.display = "none"
+           
+        })
+            
+            
+                
+
+            
+            
+            
+           
+        
+
+        .catch((error) => {
+            console.log("error:", error)
+        })
+
+      
+    }
+
+
+</script>
+
+{% endblock content %}
