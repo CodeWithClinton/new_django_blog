@@ -19,4 +19,19 @@ Install pip
      
 Install Django     
               
-``pip install django``  
+``pip install django``   
+           
+Make Migrations
+``python3 manage.py makemigrations``  
+    
+Migrate
+``python3 manage.py migrate``    
+     
+Createsuperuser   
+     
+``python3 manage.py createsuperuser``   
+    
+Runserver   
+   
+``python3 manage.py runserver 0.0.0.0:8000`` 
+
