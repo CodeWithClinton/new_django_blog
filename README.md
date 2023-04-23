@@ -21,10 +21,12 @@ Install Django
               
 ``pip install django``   
            
-Make Migrations
+Make Migrations      
+        
 ``python3 manage.py makemigrations``  
     
-Migrate
+Migrate          
+             
 ``python3 manage.py migrate``    
      
 Createsuperuser   
