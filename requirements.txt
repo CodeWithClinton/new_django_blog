@@ -5,7 +5,7 @@ certifi==2022.6.15
 charset-normalizer==2.1.0
 cloudinary==1.29.0
 dj3-cloudinary-storage==0.0.6
-django==4.2.1
+Django==4.2.1
 django-storages==1.12.3
 gunicorn==20.1.0
 idna==3.3
